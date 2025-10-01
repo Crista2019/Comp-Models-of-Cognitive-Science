@@ -25,7 +25,7 @@ def bystander_prediction(A, N):
         # if there are no bystanders, the person will definitely not be saved
         return 0
     # otherwise the model returns a predicted P(survival) which exponentially decreases when N increases and increases when A increases
-    return A * math.e ** (-A*N)
+    return A/8 * math.e ** (-A/8*N)
 
 # Exercise B – Supporting data
 
@@ -40,9 +40,8 @@ if __name__ == '__main__':
     # Exercise A
 
     # parameter test range
-    A_range = np.linspace(0, 1, 5)
-    N_range = np.linspace(0, 4, 5)
-
+    A_range = np.linspace(0, 1, 11)
+    N_range = np.linspace(0, 50, 11)
     # show predictions in text
     for A in A_range:
         for N in N_range:
