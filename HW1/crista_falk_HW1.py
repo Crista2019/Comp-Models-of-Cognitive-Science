@@ -33,6 +33,7 @@ def bystander_prediction(A, N):
     return prediction
 
 # Exercise D – The likelihood
+
 def minus_log_likelihood(A, filename="empirical.csv"):
     """
     Given a filename return the negative log-likelihood of the model.
@@ -51,16 +52,15 @@ def minus_log_likelihood(A, filename="empirical.csv"):
 
     return nll
 
-# Exercise E – Plotting MLL as function of A
-
 # Main function will walk through entire assignment
 if __name__ == '__main__':
-    # Exercise A
+    ### Exercise A
 
     # parameter test range
     A_range = np.linspace(0, 1, 11)
     N_range = np.linspace(0, 50, 11)
-    # show predictions in text
+
+    # show predictions in text output
     for A in A_range:
         for N in N_range:
             print(f"P(Survival| A={A}, N={N}) = ", bystander_prediction(A, N))
@@ -78,16 +78,16 @@ if __name__ == '__main__':
     ax.set_zlabel('Probability of Survival')
     plt.show()
 
-    # Exercise D
+    ### Exercise D
     print("NLL for supporting data:",minus_log_likelihood(0.5, "crista_falk_supporting_data.csv"))
     print("NLL for falsifying data:",minus_log_likelihood(0.5, "crista_falk_falsifying_data.csv"))
     print("NLL for empirical data:",minus_log_likelihood(0.5))
 
-    # Exercise E
+    ### Exercise E
     nll_values = [minus_log_likelihood(A=a) for a in A_range]
     print("NLL for empirical data:",nll_values)
 
-    # plotting results
+    # plotting the results
     plt.plot(A_range, nll_values, color="purple")
     plt.title('Plotting -LL as function of A', fontsize=16, fontweight='bold')
     plt.xlabel('Altruism Level', fontsize=12)
@@ -99,7 +99,7 @@ if __name__ == '__main__':
     plt.tight_layout()
     plt.show()
 
-    # Bonus exercise
+    ### Bonus exercise
     # Use numerical optimization routines from existing Python libraries, e.g., the ones in the SciPy module
     res = minimize(minus_log_likelihood, 0.3, method='Nelder-Mead')
     print(res.x)
