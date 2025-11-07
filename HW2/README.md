@@ -6,6 +6,7 @@
 ```
 conda create --name pymc_518 python=3.10 -y
 conda activate pymc_518
+conda install m2w64-toolchain
 pip install --no-cache-dir "pymc==5.18.2" 
 pip install seaborn
 ```
