@@ -17,7 +17,7 @@ def save_and_show(fig: mpl.figure.Figure, filename: str) -> None:
 
 # remove or add elements to test only certain parts at a time
 # exercises_to_run = ["A","B","C"]
-exercises_to_run = ["A","B"]
+exercises_to_run = ["A","B","C"]
 
 # pymc global variables
 RETURN_INFERENCEDATA = True
@@ -57,7 +57,7 @@ if __name__ == "__main__":
 
     # prior for the model parameter sigma found through Mathematica: sigma ~ Exp(1/mean_std)
     if "A" in exercises_to_run:
-        mean_of_prior_stddev = 400
+        mean_of_prior_stddev = 500
         lambda_of_prior_stddev = 1/mean_of_prior_stddev
 
         with pm.Model() as HalfNormalModel:
@@ -211,5 +211,8 @@ if __name__ == "__main__":
     # -----------------------------
     if "A" and "B" and "C" in exercises_to_run:
         # compute a Bayes factor
-        BF = az.compare({"GammaModel": trace_GammaModel, "HalfNormalModel": trace_HalfNormalModel})
+        BF = ":("
         print("Bayes Factor:", BF)
+        """
+        az.plot_bf(idata_conc, var_name="RT", ref_val=0.5);
+        """
