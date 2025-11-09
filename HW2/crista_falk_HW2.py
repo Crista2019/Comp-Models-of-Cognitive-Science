@@ -17,7 +17,7 @@ def save_and_show(fig: mpl.figure.Figure, filename: str) -> None:
 
 # remove or add elements to test only certain parts at a time
 EXERCISES_TO_RUN = ["A","B","C"]
-PRINT_GRAPHS = False
+PRINT_GRAPHS = True
 
 # pymc global variables
 RETURN_INFERENCEDATA = True
