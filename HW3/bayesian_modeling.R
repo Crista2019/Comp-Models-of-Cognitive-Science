@@ -105,37 +105,72 @@ stimulusDist <- stimulusDist + facet_wrap("participant")
 
 responseDist + stimulusDist
 
-# compare the different area's response distributions across participants
 long_data <- data.table(dt.localization %>%
   pivot_longer(cols = c(actualMm, responseMm), names_to = "type", values_to = "position"))
 
-combined_dists <- ggplot(data=long_data, aes(x = position, fill = handed_area)) +
-  geom_density(alpha = 0.5, position = "identity") + xlim(250,750) +
-  scale_fill_manual(values = c("dominant" = "#5F4B8BFF", "center" = "#E69A8DFF", "nondominant"="black")) +
-  facet_wrap("participant", scales = "free_x") + theme_minimal(18)
+# mean of the stimuus distribution by area
+# left_mean <- mean(long_data[type=="actualMm" & area=="Left_Shoulder"]$position)
+# mid_mean <- mean(long_data[type=="actualMm" & area=="Midline"]$position)
+# right_mean <- mean(long_data[type=="actualMm" & area=="Right_Shoulder"]$position)
 
+# mean of the response distribution by area
+long_data[, mean_val := mean(position), by=c("type","area","participant")]
+# left_mean_r <- mean(long_data[type=="responseMm" & area=="Left_Shoulder"]$position)
+# mid_mean_r <- mean(long_data[type=="responseMm" & area=="Midline"]$position)
+# right_mean_r <- mean(long_data[type=="responseMm" & area=="Right_Shoulder"]$position)
+
+# compare the different area's stimulus distributions across participants
+combined_dists <- ggplot(data=long_data[type=="actualMm"], aes(x = position, fill = handed_area)) +
+  geom_density(alpha = 0.5, position = "identity") + xlim(250,750) +
+  scale_fill_manual(values = c("dominant" = "grey80", "center" = "grey10", "nondominant"="grey40"),labels = c("Dominant Hand", "Body Midline", "Non-dominant Hand")) +
+  facet_wrap("participant", scales = "free_x") + theme_minimal(18) +
+  xlab("Actual Hand Position (mm)") + ylab("Density") + labs(fill="Handed Region") +
+  geom_vline(data=long_data[type=="actualMm"], aes(xintercept = mean_val), linetype=2) 
+  
 combined_dists
 
 ggsave(combined_dists,
        path="~/Desktop/Bayes",
-       filename = "handed_area.pdf",
+       filename = "actual_by_handed_area.pdf",
+       bg = "transparent",
+       width=500,
+       height=500,
+       units="mm")
+
+# compare the different area's response distributions across participants
+combined_dists <- ggplot(data=long_data[type=="responseMm"], aes(x = position, fill = handed_area)) +
+  geom_density(alpha = 0.5, position = "identity") + xlim(250,750) +
+  facet_wrap("participant", scales = "free_x") + theme_minimal(18) +
+  geom_vline(data=long_data[type=="responseMm"], aes(xintercept = mean_val, color=handed_area), linetype=2, show.legend = FALSE) +
+  xlab("Reported Hand Position (mm)") + ylab("Density") + labs(fill="Handed Region") +
+  scale_color_manual(values = c("dominant" = "#5F4B8BFF", "center" = "#E69A8DFF", "nondominant"="tan")) +
+  scale_fill_manual(values = c("dominant" = "#5F4B8BFF", "center" = "#E69A8DFF", "nondominant"="tan"), labels = c("Dominant Hand", "Body Midline", "Non-dominant Hand"))
+  
+combined_dists
+
+ggsave(combined_dists,
+       path="~/Desktop/Bayes",
+       filename = "response_by_handed_area.pdf",
        bg = "transparent",
        width=500,
        height=500,
        units="mm")
 
 # compare the actual to response positions across handed areas
-combined_dists <- ggplot(data=long_data[participant!="S19"], aes(x = position, fill = type)) +
+combined_dists <- ggplot(data=long_data, aes(x = position, fill = type)) +
   geom_density(alpha = 0.5, position = "identity") + xlim(250,750) +
-  # scale_color_manual(values = c("actualMm" = "#5F4B8BFF", "responseMm" = "#E69A8DFF")) +
-  scale_fill_manual(values = c("actualMm" = "#5F4B8BFF", "responseMm" = "#E69A8DFF")) +
-  facet_wrap("participant", scales = "free_x") + theme_minimal(18)
+  scale_color_manual(values = c("actualMm" = "#5F4B8BFF", "responseMm" = "#E69A8DFF"), labels = c("Actual", "Response")) +
+  scale_fill_manual(values = c("actualMm" = "#5F4B8BFF", "responseMm" = "#E69A8DFF"),labels = c("Stimulus Distribution", "Response Distribution")) +
+  facet_wrap("participant", scales = "free_x") + theme_minimal(18) + labs(fill=element_blank()) +
+  geom_vline(data=long_data[type=="actualMm"], aes(xintercept = mean_val, color=type), linetype=4, show.legend=FALSE) +
+  geom_vline(data=long_data[type=="responseMm"], aes(xintercept = mean_val, color=type), linetype=4, show.legend=FALSE) +
+  xlab("Hand Position (mm)") + ylab("Density") 
 
 combined_dists
 
 ggsave(combined_dists,
        path="~/Desktop/Bayes",
-       filename = "actual_vs_response.pdf",
+       filename = "actual_vs_response_w_means.pdf",
        bg = "transparent",
        width=500,
        height=500,
