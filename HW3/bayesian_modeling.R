@@ -122,7 +122,7 @@ long_data[, mean_val := mean(position), by=c("type","area","participant")]
 # compare the different area's stimulus distributions across participants
 combined_dists <- ggplot(data=long_data[type=="actualMm"], aes(x = position, fill = handed_area)) +
   geom_density(alpha = 0.5, position = "identity") + xlim(250,750) +
-  scale_fill_manual(values = c("dominant" = "grey80", "center" = "grey10", "nondominant"="grey40"),labels = c("Dominant Hand", "Body Midline", "Non-dominant Hand")) +
+  scale_fill_manual(values = c("grey80","grey5","grey40"), labels = c("Body Midline", "Dominant", "Non-dominant")) +
   facet_wrap("participant", scales = "free_x") + theme_minimal(18) +
   xlab("Actual Hand Position (mm)") + ylab("Density") + labs(fill="Handed Region") +
   geom_vline(data=long_data[type=="actualMm"], aes(xintercept = mean_val), linetype=2) 
@@ -141,10 +141,10 @@ ggsave(combined_dists,
 combined_dists <- ggplot(data=long_data[type=="responseMm"], aes(x = position, fill = handed_area)) +
   geom_density(alpha = 0.5, position = "identity") + xlim(250,750) +
   facet_wrap("participant", scales = "free_x") + theme_minimal(18) +
+  scale_fill_manual(values = c("#5F4B8BFF","#E69A8DFF","tan"), labels=c("Body Midline", "Dominant", "Non-dominant")) +
   geom_vline(data=long_data[type=="responseMm"], aes(xintercept = mean_val, color=handed_area), linetype=2, show.legend = FALSE) +
   xlab("Reported Hand Position (mm)") + ylab("Density") + labs(fill="Handed Region") +
-  scale_color_manual(values = c("dominant" = "#5F4B8BFF", "center" = "#E69A8DFF", "nondominant"="tan")) +
-  scale_fill_manual(values = c("dominant" = "#5F4B8BFF", "center" = "#E69A8DFF", "nondominant"="tan"), labels = c("Dominant Hand", "Body Midline", "Non-dominant Hand"))
+  scale_color_manual(values = c("dominant" = "#5F4B8BFF", "center" = "#E69A8DFF", "nondominant"="tan")) 
   
 combined_dists
 
